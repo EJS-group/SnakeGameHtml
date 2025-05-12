@@ -10,10 +10,11 @@
             background-color: #1b1a1a;
             color: white;
             text-align: center;
-            padding-top: 50px;
+            padding-top: 100px;
         }
         h1 {
             color: #ff4081;
+            margin: 18px;
         }
         .button {
             display: inline-block;
@@ -80,7 +81,7 @@
 
             scoreTable.innerHTML = "";
             scores.sort((a, b) => b.score - a.score); // Sort by high score
-            scores.slice(0, 5).forEach(game => {
+            scores.slice(0, 2).forEach(game => {
                 let row = `<tr><td>${game.player}</td><td>${game.score}</td></tr>`;
                 scoreTable.innerHTML += row;
             });

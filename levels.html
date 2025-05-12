@@ -63,7 +63,7 @@
 
         .buttons {
             display: flex;
-            gap: 400px;
+            gap: 10px;
         }
 
         .score-container {
@@ -75,19 +75,19 @@
 
         .game-board {
             display:grid;
-            grid-template-columns: repeat(20, 22px);
-            grid-template-rows: repeat(20, 22px);
+            grid-template-columns: repeat(24, 10px);
+            grid-template-rows: repeat(24, 10px);
             background-color: #d1d1d1;
             border: 3px solid #333;
             padding: 5px;
             border-radius: 12px;
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-            margin-top: 10px; /* Move board up */
+            margin-top: 5px; /* Move board up */
         }
 
         .cell {
-            width: 22px;
-            height: 22px;
+            width: 10px;
+            height: 10px;
             background-color: #ffffff;
             display: flex;
             justify-content: center;
@@ -96,7 +96,7 @@
             font-weight: bold;
             color: white;
             border-radius: 2px;
-            transition: background 0.2s ease;
+            transition: background 0.4s ease;
         }
 
         .snake {
@@ -105,9 +105,9 @@
         }
 
         .food {
-            background: rgb(4, 90, 93);
+            background: rgb(217, 232, 233);
             border-radius: 50%;
-            color: white;
+            color: rgb(230, 11, 11);
             font-family: Arial, sans-serif;
             font-size: 16px;
             font-weight: bold;
@@ -116,15 +116,15 @@
         .keyboard {
             display: flex;
             flex-wrap: wrap;
-            max-width: 460px;
-            margin-top: 20px; /* Adjust spacing below the game board */
+            max-width: 380px;
+            margin-top: 5px; /* Adjust spacing below the game board */
             gap: 8px;
             justify-content: center;
         }
 
         .key {
-            width: 42px;
-            height: 42px;
+            width: 32px;
+            height: 32px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -170,18 +170,19 @@
     <div class="header">
         <div class="buttons">
         <button class="game-button" onclick="homepage()">Home</button>
+         <h2>Score:<span id="score">0</span></h2>
         <button class="game-button" onclick="restart()">Restart</button>
         </div>
-        <div class="score-container">
+        <!-- <div class="score-container">
             <h2>Score: <span id="score">0</span></h2>
-        </div>
+        </div> -->
     </div>
     <div class="game-board" id="game-board"></div>
     <div class="keyboard" id="keyboard"></div>
 
     <script>
-        const boardSize = 20;
-        let snake = [{ x: 10, y: 10 }];
+        const boardSize = 24;
+        let snake = [{ x: 12, y: 12}];
         let food = generateFood();
         let foodLetter = getRandomLetter();
         let direction = { x: 1, y: 0 }; 
