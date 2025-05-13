@@ -8,7 +8,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
         :root {
-             --size: 20px;
+            --size: 20px;
         }
 
         body {
@@ -18,33 +18,33 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start; /* Align content to the top */
+            justify-content: flex-start;
             align-items: center;
             font-family: 'Poppins', sans-serif;
             background-color: #1b1a1a;
-            padding-top: 30px; /* Add spacing from the top */
+            padding-top: 30px;
         }
 
         .dust {
-            position: fixed; /* Stay in place */
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1; /* Move it behind everything */
+            z-index: -1;
             background: conic-gradient(from 180deg at 50% 70%, #fff 0deg, #eec32d 72deg, #ec4b4b 144deg, #709ab9 216deg, #4dffbf 288deg, #fff 1turn);
-             mask:
-                 radial-gradient(circle at 50% 50%, white 2px, transparent 2.5px) 50% 50% / var(--size) var(--size),
+            mask:
+                radial-gradient(circle at 50% 50%, white 2px, transparent 2.5px) 50% 50% / var(--size) var(--size),
                 url("https://assets.codepen.io/605876/noise-mask.png") 256px 50% / 256px 256px;
-                mask-composite: intersect;
-                animation: flicker 20s infinite linear;
-            }
+            mask-composite: intersect;
+            animation: flicker 20s infinite linear;
+        }
 
         @keyframes flicker {
             to {
                 mask-position: 50% 50%, 0 50%;
-                }
             }
+        }
 
         h2 {
             color: #ff4081;
@@ -82,7 +82,7 @@
             padding: 5px;
             border-radius: 12px;
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-            margin-top: 5px; /* Move board up */
+            margin-top: 5px;
         }
 
         .cell {
@@ -117,7 +117,7 @@
             display: flex;
             flex-wrap: wrap;
             max-width: 380px;
-            margin-top: 5px; /* Adjust spacing below the game board */
+            margin-top: 5px;
             gap: 8px;
             justify-content: center;
         }
@@ -148,7 +148,7 @@
             box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.3);
         }
 
-        .game-button{
+        .game-button {
             width: 90px;
             height: 40px;
             display: flex;
@@ -169,28 +169,26 @@
     <div class="dust"></div>
     <div class="header">
         <div class="buttons">
-        <button class="game-button" onclick="homepage()">Home</button>
-         <h2>Score:<span id="score">0</span></h2>
-        <button class="game-button" onclick="restart()">Restart</button>
+            <button class="game-button" onclick="homepage()">Home</button>
+            <h2>Score:<span id="score">0</span></h2>
+            <button class="game-button" onclick="restart()">Restart</button>
         </div>
-        <!-- <div class="score-container">
-            <h2>Score: <span id="score">0</span></h2>
-        </div> -->
     </div>
     <div class="game-board" id="game-board"></div>
     <div class="keyboard" id="keyboard"></div>
 
     <script>
         const boardSize = 24;
-        let snake = [{ x: 12, y: 12}];
+        let snake = [{ x: 12, y: 12 }];
         let food = generateFood();
         let foodLetter = getRandomLetter();
-        let direction = { x: 1, y: 0 }; 
+        let direction = { x: 1, y: 0 };
         let score = 0;
         let movingToFood = false;
         let gameBoard = document.getElementById("game-board");
         let keyboard = document.getElementById("keyboard");
         let scoreDisplay = document.getElementById("score");
+        let gameInterval;
 
         function createBoard() {
             for (let i = 0; i < boardSize * boardSize; i++) {
@@ -220,11 +218,7 @@
         function moveSnake() {
             if (!movingToFood) {
                 let head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
-
-                if (checkCollision(head)) {
-                    return;
-                }
-
+                if (checkCollision(head)) return;
                 snake.unshift(head);
                 snake.pop();
             } else {
@@ -236,19 +230,16 @@
 
         function checkCollision(head) {
             if (head.x < 0 || head.x >= boardSize || head.y < 0 || head.y >= boardSize) {
-        
-        // Save final score to localStorage
                 localStorage.setItem("currentScore", score);
-
+                 clearInterval(gameInterval);
                 setTimeout(() => {
-                 gameBoard.classList.remove("shake");
-                 window.location.href = "gameover.html"; // Redirect to game over page
-        }, 500);
-
-                 return true;
-            }   
+                   
+                    window.location.href = "gameover.html";
+                }, 500);
+                return true;
+            }
             return false;
-        }          
+        }
 
         function autoMoveToFood() {
             if (snake[0].x !== food.x) {
@@ -310,23 +301,49 @@
             movingToFood = false;
         }
 
+        function getSpeedFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+                 const difficulty = params.get("difficulty") || "medium"; // default if not set
+
+            switch (difficulty.toLowerCase()) {
+
+                case "easy":
+
+                    return 400; // slow
+
+                case "medium":
+
+                    return 300; // medium
+
+                case "hard":
+
+                    return 200; // fast
+
+                default:
+
+                    return 150;
+
+            }
+        }
+
         function startGame() {
             createBoard();
             createKeyboard();
             render();
-            setInterval(moveSnake, 400);
+            const speed = getSpeedFromUrl();
+              gameInterval = setInterval(moveSnake, speed);
         }
 
         function homepage() {
-            window.location.href = "index.html"; // Navigate to home page
+            window.location.href = "index.html";
         }
 
         function restart() {
-            window.location.href = "levels.html"; // Navigate to home page
+            window.location.href = "levels.html";
         }
 
         function endGame(finalScore) {
-        localStorage.setItem("currentScore", finalScore); // Store score
+            localStorage.setItem("currentScore", finalScore);
         }
 
         startGame();

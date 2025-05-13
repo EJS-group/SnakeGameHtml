@@ -81,7 +81,7 @@
 
             scoreTable.innerHTML = "";
             scores.sort((a, b) => b.score - a.score); // Sort by high score
-            scores.slice(0, 2).forEach(game => {
+            scores.slice(0, 5).forEach(game => {
                 let row = `<tr><td>${game.player}</td><td>${game.score}</td></tr>`;
                 scoreTable.innerHTML += row;
             });
