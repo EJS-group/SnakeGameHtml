@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Levels</title>
     <style>
         body {
@@ -19,12 +20,12 @@
         .button {
             display: inline-block;
             padding: 10px 20px;
-            margin: 10px;
+            margin: 5px;
             background: #e65787;
             color: white;
             text-decoration: none;
             font-size: 18px;
-            border-radius: 5px;
+            border-radius: 25px;
             cursor: pointer;
             transition: 0.3s;
         }
@@ -50,8 +51,11 @@
 <body>
     <h1>Game Over</h1>
     <h2>Your Score: <span id="final-score"></span></h2>
-    <a href="levels.html" class="button">Play Again</a>
-    <a href="index.html" class="button">Home</a>
+    
+    <a href="index.html" class="button"><i class="fa fa-home" style="font-size:24px"></i></a>
+    <a href="#" class="button" onclick="clearData()">Clear Data</a>
+    <a href="levels.html" class="button"><i class="fa fa-repeat" style="font-size:24px;"></i></a>
+
     
     <h2>Leaderboard</h2>
     <table>
@@ -67,27 +71,49 @@
     </table>
     
     <script>
-        function updateScoreboard() {
-            let scores = JSON.parse(localStorage.getItem("gameScores")) || [];
-            let scoreTable = document.getElementById("score-table");
-            let finalScore = parseInt(localStorage.getItem("currentScore")) || 0;
-            let playerName = localStorage.getItem("playerName") || "Unknown";
-            document.getElementById("final-score").innerText = finalScore;
+       
+  function updateScoreboard() {
+    let scores = JSON.parse(localStorage.getItem("gameScores")) || [];
+    let scoreTable = document.getElementById("score-table");
+    let finalScore = parseInt(localStorage.getItem("currentScore")) || 0;
+    let playerName = localStorage.getItem("playerName") || "Unknown";
+    document.getElementById("final-score").innerText = finalScore;
 
-            if (finalScore > 0) {
-                scores.push({ player: playerName, score: finalScore });
-                localStorage.setItem("gameScores", JSON.stringify(scores));
+    if (finalScore > 0) {
+        let existingPlayer = scores.find(score => score.player === playerName);
+        if (existingPlayer) {
+            // Update score only if the new one is higher
+            if (finalScore > existingPlayer.score) {
+                existingPlayer.score = finalScore;
             }
-
-            scoreTable.innerHTML = "";
-            scores.sort((a, b) => b.score - a.score); // Sort by high score
-            scores.slice(0, 5).forEach(game => {
-                let row = `<tr><td>${game.player}</td><td>${game.score}</td></tr>`;
-                scoreTable.innerHTML += row;
-            });
+            // If you want to always update regardless of being higher, use:
+            // existingPlayer.score = finalScore;
+        } else {
+            scores.push({ player: playerName, score: finalScore });
         }
-        
-        updateScoreboard();
+        localStorage.setItem("gameScores", JSON.stringify(scores));
+    }
+
+    scoreTable.innerHTML = "";
+    scores.sort((a, b) => b.score - a.score);
+    scores.slice(0, 5).forEach(game => {
+        let row = `<tr><td>${game.player}</td><td>${game.score}</td></tr>`;
+        scoreTable.innerHTML += row;
+    });
+}
+
+function clearData() {
+    localStorage.removeItem("gameScores");
+    localStorage.removeItem("currentScore");
+    localStorage.removeItem("playerName");
+    alert("Data cleared! Reloading...");
+    location.reload();
+}
+
+updateScoreboard();
+
+</script>
+
     </script>
 </body>
 </html>

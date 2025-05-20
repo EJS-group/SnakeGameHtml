@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Snake Game</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
@@ -52,13 +54,14 @@
             margin-bottom: 10px;
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 6px;
         }
 
         .header {
             display: flex;
             align-items: center;
             flex-direction: column;
+            
         }
 
         .buttons {
@@ -67,14 +70,14 @@
         }
 
         .score-container {
-            margin-top: 3px;
+            margin-top: 9px;
             font-size: 18px;
             font-weight: bold;
             color: #ff4081;
         }
 
         .game-board {
-            display:grid;
+            display: grid;
             grid-template-columns: repeat(24, 10px);
             grid-template-rows: repeat(24, 10px);
             background-color: #d1d1d1;
@@ -116,7 +119,7 @@
         .keyboard {
             display: flex;
             flex-wrap: wrap;
-            max-width: 380px;
+            max-width: 300px;
             margin-top: 5px;
             gap: 8px;
             justify-content: center;
@@ -149,30 +152,58 @@
         }
 
         .game-button {
-            width: 90px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             display: flex;
             justify-content: center;
             align-items: center;
             background: rgb(253, 230, 140);
             color: rgb(20, 19, 2);
             font-size: 16px;
-            border-radius: 6px;
+            border-radius: 30px;
             cursor: pointer;
             box-shadow: 7px 4px 10px rgba(0, 0, 0, 0.9);
             transition: 0.2s;
         }
-
+        #next-letter-display{
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffffff;
+            margin-top: 6px;
+        }
+        #next-letter{
+            color: #ff4081;
+            text-shadow: 2px 2px 10px rgba(255, 64, 129, 0.7);
+        }   
+          span{
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff4081;
+            text-shadow: 2px 2px 10px rgba(255, 64, 129, 0.7);
+            margin-top: 6px;
+          }  
+          #dv{
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffffff;
+            margin-top: 6px;
+          }     
     </style>
 </head>
+
 <body>
     <div class="dust"></div>
     <div class="header">
         <div class="buttons">
-            <button class="game-button" onclick="homepage()">Home</button>
+            <button class="game-button" onclick="homepage()"><i class="fa fa-home" style="font-size:28px"></i></button>
             <h2>Score:<span id="score">0</span></h2>
-            <button class="game-button" onclick="restart()">Restart</button>
+          
+            <button class="game-button" onclick="restart()"><i class="fa fa-repeat"
+                    style="font-size:24px;"></i></button>
         </div>
+       <div id="dv">Player : <span id="span"></span></div> 
+          <div id="next-letter-display">Next Letter: <span id="next-letter">?</span></div>
+          
     </div>
     <div class="game-board" id="game-board"></div>
     <div class="keyboard" id="keyboard"></div>
@@ -182,6 +213,7 @@
         let snake = [{ x: 12, y: 12 }];
         let food = generateFood();
         let foodLetter = getRandomLetter();
+        let nextFoodLetter = getRandomLetter();
         let direction = { x: 1, y: 0 };
         let score = 0;
         let movingToFood = false;
@@ -199,6 +231,8 @@
         }
 
         function render() {
+            document.getElementById("next-letter").innerText = nextFoodLetter;
+
             document.querySelectorAll(".cell").forEach(cell => {
                 cell.classList.remove("snake", "food");
                 cell.innerText = "";
@@ -231,9 +265,9 @@
         function checkCollision(head) {
             if (head.x < 0 || head.x >= boardSize || head.y < 0 || head.y >= boardSize) {
                 localStorage.setItem("currentScore", score);
-                 clearInterval(gameInterval);
+                clearInterval(gameInterval);
                 setTimeout(() => {
-                   
+
                     window.location.href = "gameover.html";
                 }, 500);
                 return true;
@@ -254,12 +288,16 @@
                 score++;
                 scoreDisplay.innerText = score;
                 movingToFood = false;
+
+                // Shift food and letters
                 food = generateFood();
-                foodLetter = getRandomLetter();
+                foodLetter = nextFoodLetter;
+                nextFoodLetter = getRandomLetter();
             } else {
                 snake.unshift(head);
                 snake.pop();
             }
+
         }
 
         function createKeyboard() {
@@ -296,14 +334,15 @@
             direction = { x: 1, y: 0 };
             score = 0;
             scoreDisplay.innerText = score;
-            food = generateFood();
-            foodLetter = getRandomLetter();
+           foodLetter = getRandomLetter();
+nextFoodLetter = getRandomLetter();
+
             movingToFood = false;
         }
 
         function getSpeedFromUrl() {
             const params = new URLSearchParams(window.location.search);
-                 const difficulty = params.get("difficulty") || "medium"; // default if not set
+            const difficulty = params.get("difficulty") || "medium"; // default if not set
 
             switch (difficulty.toLowerCase()) {
 
@@ -331,7 +370,7 @@
             createKeyboard();
             render();
             const speed = getSpeedFromUrl();
-              gameInterval = setInterval(moveSnake, speed);
+            gameInterval = setInterval(moveSnake, speed);
         }
 
         function homepage() {
@@ -347,6 +386,9 @@
         }
 
         startGame();
+        var x = localStorage.getItem("playerName");
+        document.getElementById("span").innerHTML = x;
     </script>
 </body>
+
 </html>
